@@ -57,29 +57,29 @@ typedef void (*uloop_process_handler)(struct uloop_process *c, int ret);
 
 struct uloop_fd
 {
-	uloop_fd_handler cb;
+	uloop_fd_handler cb; /* 文件描述符对应的处理函数(基于events) */
 	int fd;
 	bool eof;
 	bool error;
-	bool registered;
-	uint8_t flags;
+	bool registered; /*是否已经添加到epoll的监控队列*/
+	uint8_t flags;   /*ULOOP_READ | ULOOP_WRITE | ULOOP_BLOCKING等*/
 };
 
 struct uloop_timeout
 {
 	struct list_head list;
-	bool pending;
+	bool pending;    //添加一个新的timeout pending是true， false删除该节点timeout
 
-	uloop_timeout_handler cb;
-	struct timeval time;
+	uloop_timeout_handler cb;  //超时处理函数
+	struct timeval time;       //超时时间
 };
 
 struct uloop_process
 {
 	struct list_head list;
-	bool pending;
+	bool pending;    //添加一个新的子进程 pending是true， false删除该节点
 
-	uloop_process_handler cb;
+	uloop_process_handler cb;  // 子进程退出时调用
 	pid_t pid;
 };
 
